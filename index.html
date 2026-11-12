@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Para Fany Lu 🌻❤️</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Tipografías románticas y legibles -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tone.js para melodía/efecto sutil opcional sin URLs externas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+    <style>
+        :root {
+            --gold-light: #fef3c7;
+            --amber-warm: #f59e0b;
+            --rose-soft: #fda4af;
+            --deep-sunset: #2a1215;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100dvh; /* Se adapta exactamente al alto visible en móviles y escritorio */
+            overflow: hidden; /* Evita scroll innecesario */
+            font-family: 'Quicksand', sans-serif;
+            background: radial-gradient(circle at 20% 20%, #5c2718 0%, #3b171b 45%, #1d0c11 100%);
+            color: #fffbeb;
+            user-select: none;
+        }
+
+        /* Resplandor ambiental cálido en el fondo */
+        .ambient-glow {
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 80% 15%, rgba(251, 191, 36, 0.22) 0%, transparent 45%),
+                radial-gradient(circle at 15% 85%, rgba(244, 63, 94, 0.20) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Lienzo de girasoles y corazones */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Contenedor principal centrado */
+        .main-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(0.75rem, 3vw, 2rem);
+        }
+
+        /* Tarjeta Glassmorphism responsiva */
+        .glass-card {
+            width: min(92vw, 620px);
+            max-height: 88dvh;
+            background: linear-gradient(145deg, rgba(255, 251, 235, 0.13) 0%, rgba(255, 228, 230, 0.07) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1.5px solid rgba(253, 224, 71, 0.35);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.6),
+                inset 0 0 24px rgba(251, 191, 36, 0.12);
+            border-radius: clamp(1.25rem, 4vw, 2rem);
+            padding: clamp(1.25rem, 4vw, 2.5rem);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Tipografía cursiva romántica para el nombre */
+        .romantic-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(2.6rem, 8vw, 4.4rem);
+            line-height: 1.1;
+            background: linear-gradient(to right, #fde68a, #fbbf24, #fda4af, #fde68a);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shineText 5s linear infinite;
+            filter: drop-shadow(0 2px 10px rgba(251, 191, 36, 0.3));
+            margin: 0.25rem 0;
+        }
+
+        @keyframes shineText {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        /* Área donde se escribe el mensaje letra por letra */
+        .typewriter-container {
+            width: 100%;
+            min-height: clamp(120px, 24dvh, 210px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: clamp(0.75rem, 2.5dvh, 1.5rem) 0;
+            padding: 0 0.25rem;
+            overflow-y: auto;
+        }
+
+        .typewriter-text {
+            font-size: clamp(1rem, 2.8vw, 1.28rem);
+            line-height: 1.65;
+            font-weight: 500;
+            color: #fef9c3;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+            letter-spacing: 0.01em;
+        }
+
+        /* Cursor parpadeante del efecto de escritura */
+        .cursor {
+            display: inline-block;
+            width: 2.5px;
+            height: 1.2em;
+            background-color: #fbbf24;
+            margin-left: 3px;
+            vertical-align: middle;
+            border-radius: 2px;
+            box-shadow: 0 0 8px #fbbf24;
+            animation: blinkCursor 0.75s infinite;
+        }
+
+        @keyframes blinkCursor {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        /* Botón principal brillante */
+        .love-btn {
+            background: linear-gradient(135deg, #f59e0b 0%, #e11d48 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: clamp(0.92rem, 2.5vw, 1.05rem);
+            padding: clamp(0.7rem, 2vw, 0.9rem) clamp(1.3rem, 4vw, 2rem);
+            border-radius: 9999px;
+            border: 1px solid rgba(254, 240, 138, 0.6);
+            box-shadow: 0 8px 25px rgba(225, 29, 72, 0.4), 0 0 15px rgba(245, 158, 11, 0.3);
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .love-btn:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 12px 30px rgba(225, 29, 72, 0.55), 0 0 22px rgba(251, 191, 36, 0.5);
+        }
+
+        .love-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Botón secundario sutil */
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(253, 224, 71, 0.3);
+            color: #fde68a;
+            border-radius: 9999px;
+            padding: 0.55rem 0.9rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .icon-btn:hover {
+            background: rgba(251, 191, 36, 0.2);
+            border-color: rgba(253, 224, 71, 0.6);
+        }
+
+        /* Latido suave en el emblema superior */
+        @keyframes pulseSlow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        .animate-pulse-slow {
+            animation: pulseSlow 2.8s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Resplandor de fondo cálido -->
+    <div class="ambient-glow"></div>
+
+    <!-- Lienzo animado para girasoles y corazones -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Contenedor Principal -->
+    <main class="main-wrapper" id="touch-area">
+        <section class="glass-card" aria-label="Dedicatoria romántica para Fany Lu">
+            
+            <!-- Cabecera decorativa con SVG de girasol y corazón -->
+            <div class="w-full flex items-center justify-between">
+                <span class="text-xs sm:text-sm tracking-widest uppercase text-amber-200/80 font-semibold">
+                    ✨ Con todo mi cariño ✨
+                </span>
+                <button id="sound-toggle" class="icon-btn" title="Activar o desactivar sonido suave de escritura">
+                    <span id="sound-icon">🔇</span>
+                    <span class="hidden sm:inline" id="sound-label">Sonido suave</span>
+                </button>
+            </div>
+
+            <!-- Emblema Girasol + Corazón y Título -->
+            <div class="mt-2 flex flex-col items-center">
+                <div class="animate-pulse-slow mb-1" aria-hidden="true">
+                    <!-- SVG Girasol con Corazón central -->
+                    <svg width="54" height="54" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g transform="translate(50,50)">
+                            <!-- Pétalos de girasol -->
+                            <g fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5">
+                                <ellipse rx="8" ry="24" transform="rotate(0) translate(0,-24)"/>
+                                <ellipse rx="8" ry="24" transform="rotate(30) translate(0,-24)"/>
+                                <ellipse rx="8" ry="24" transform="rotate(60) translate(0,-24)"/>
+                                <ellipse rx="8" ry="24" transform="rotate(90) translate(0,-24)"/>
+                                <ellipse rx="8" ry="24" transform="rotate(120) translate(0,-24)"/>
+                                <ellipse rx="8" ry="24" transform="rotate(150) translate(0,-24)"/>
+                                <ellipse rx="8" ry="24" transform="rotate(180) translate(0,-24)"/>
+                                <ellipse rx="8" ry="24" transform="rotate(210) translate(0,-24)"/>
+                                <ellipse rx="8" ry="24" transform="rotate(240) translate(0,-24)"/>
+                                <ellipse rx="8" ry="24" transform="rotate(270) translate(0,-24)"/>
+                                <ellipse rx="8" ry="24" transform="rotate(300) translate(0,-24)"/>
+                                <ellipse rx="8" ry="24" transform="rotate(330) translate(0,-24)"/>
+                            </g>
+                            <!-- Centro cálido -->
+                            <circle r="18" fill="#451A03" stroke="#D97706" stroke-width="2"/>
+                            <!-- Corazón brillante en el centro -->
+                            <path d="M0 9 C-10 1 -14 -7 -7 -11 C-3 -13 0 -9 0 -6 C0 -9 3 -13 7 -11 C14 -7 10 1 0 9 Z" fill="#FB7185"/>
+                        </g>
+                    </svg>
+                </div>
+                <p class="text-xs sm:text-sm text-rose-200/90 tracking-wider font-medium">Para la chica más especial</p>
+                <h1 class="romantic-title" id="title-display"></h1>
+            </div>
+
+            <!-- Contenedor del texto que se escribe letra por letra -->
+            <div class="typewriter-container">
+                <p class="typewriter-text">
+                    <span id="typed-output"></span><span class="cursor" id="typing-cursor"></span>
+                </p>
+            </div>
+
+            <!-- Controles e Interactividad -->
+            <div class="w-full flex flex-col items-center gap-3">
+                <div class="flex flex-wrap items-center justify-center gap-2.5">
+                    <button id="next-msg-btn" class="love-btn">
+                        <span>Para ti, Fany Lu</span>
+                        <span>🌻❤️</span>
+                    </button>
+                    <button id="replay-btn" class="icon-btn" title="Volver a escribir este mensaje">
+                        <span>✍️ Releer</span>
+                    </button>
+                </div>
+
+                <!-- Indicador de mensajes y pista táctil -->
+                <div class="flex items-center justify-between w-full pt-2 border-t border-amber-200/15 text-[11px] sm:text-xs text-amber-100/70">
+                    <span id="msg-counter">Carta 1 de 6</span>
+                    <span>Toca la pantalla para lanzar girasoles y corazones ✨</span>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <script>
+        /**
+         * Colección de mensajes románticos dedicados exclusivamente a Fany Lu.
+         */
+        const romanticMessages = [
+            "Fany Lu, como un girasol siempre busca la luz del sol, mi corazón siempre te busca a ti. Eres esa sonrisa bonita que ilumina hasta mis días más nublados y convierte cada instante a tu lado en mi recuerdo favorito.",
+            "Si tuviera que elegir un lugar seguro en este mundo, sin dudarlo sería justo donde estés tú, Fany Lu. Tienes una magia tan dulce y auténtica que haces que todo a tu alrededor florezca con alegría.",
+            "Hay personas que pasan por la vida y otras, como tú, Fany Lu, que se quedan en el alma. Gracias por existir, por tu ternura y por regalarme motivos tan bonitos para sonreír cada día.",
+            "Eres tan radiante como un campo lleno de girasoles bajo el sol de la tarde, Fany Lu. Admiro tu forma de ser, tu luz propia y esa dulzura que conquista mi corazón sin siquiera intentarlo.",
+            "Cada latido lleva un poquito de tu nombre, Fany Lu. No importa la hora ni el lugar, pensarte siempre trae calma, calidez y las ganas más bonitas de verte feliz.",
+            "Prometo recordarte siempre lo valiosa, hermosa y especial que eres, Fany Lu. Que nunca te falten razones para brillar, porque tu felicidad es el regalo más lindo para mí."
+        ];
+
+        // Referencias al DOM
+        const titleDisplay = document.getElementById('title-display');
+        const typedOutput = document.getElementById('typed-output');
+        const nextMsgBtn = document.getElementById('next-msg-btn');
+        const replayBtn = document.getElementById('replay-btn');
+        const msgCounter = document.getElementById('msg-counter');
+        const soundToggle = document.getElementById('sound-toggle');
+        const soundIcon = document.getElementById('sound-icon');
+        const soundLabel = document.getElementById('sound-label');
+
+        // Estado de la escritura
+        let currentMessageIndex = 0;
+        let typingTimeout = null;
+        let titleTimeout = null;
+        let isSoundEnabled = false;
+        let synth = null;
+
+        /**
+         * Inicializa un sintetizador suave con Tone.js (sin archivos externos)
+         */
+        function initAudio() {
+            if (!synth && window.Tone) {
+                synth = new Tone.PolySynth(Tone.Synth, {
+                    oscillator: { type: 'sine' },
+                    envelope: {
+                        attack: 0.01,
+                        decay: 0.12,
+                        sustain: 0.02,
+                        release: 0.3
+                    },
+                    volume: -18
+                }).toDestination();
+            }
+        }
+
+        // Notas pentatónicas cálidas para acompañar suavemente el tipeo
+        const gentleNotes = ['C5', 'D5', 'E5', 'G5', 'A5', 'C6'];
+
+        function playSoftNote() {
+            if (!isSoundEnabled || !synth) return;
+            try {
+                if (Tone.context.state !== 'running') {
+                    Tone.start();
+                }
+                const note = gentleNotes[Math.floor(Math.random() * gentleNotes.length)];
+                synth.triggerAttackRelease(note, '32n');
+            } catch (e) {
+                // Ignorar si el navegador bloquea audio antes de interacción
+            }
+        }
+
+        // Control de sonido opcional
+        soundToggle.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            initAudio();
+            if (window.Tone && Tone.context.state !== 'running') {
+                await Tone.start();
+            }
+            isSoundEnabled = !isSoundEnabled;
+            soundIcon.textContent = isSoundEnabled ? '🔊' : '🔇';
+            if (soundLabel) {
+                soundLabel.textContent = isSoundEnabled ? 'Sonido activo' : 'Sonido suave';
+            }
+            if (isSoundEnabled) playSoftNote();
+        });
+
+        /**
+         * Escribe el título "Fany Lu" letra por letra y luego inicia el mensaje principal.
+         */
+        function typeTitleAndMessage(messageText) {
+            clearTimeout(typingTimeout);
+            clearTimeout(titleTimeout);
+
+            const titleTarget = "Fany Lu";
+            titleDisplay.textContent = "";
+            typedOutput.textContent = "";
+
+            let titleCharIdx = 0;
+
+            function typeTitleStep() {
+                if (titleCharIdx < titleTarget.length) {
+                    titleDisplay.textContent += titleTarget.charAt(titleCharIdx);
+                    if (titleCharIdx % 2 === 0) playSoftNote();
+                    titleCharIdx++;
+                    titleTimeout = setTimeout(typeTitleStep, 95);
+                } else {
+                    // Una vez escrito "Fany Lu", comienza a escribir el mensaje romántico
+                    setTimeout(() => startTypewriter(messageText), 250);
+                }
+            }
+
+            typeTitleStep();
+        }
+
+        /**
+         * Efecto de máquina de escribir fluido para el cuerpo del mensaje.
+         */
+        function startTypewriter(text) {
+            clearTimeout(typingTimeout);
+            typedOutput.textContent = "";
+            let charIndex = 0;
+
+            function typeNextChar() {
+                if (charIndex < text.length) {
+                    const currentChar = text.charAt(charIndex);
+                    typedOutput.textContent += currentChar;
+                    charIndex++;
+
+                    // Sonido sutil cada cierto número de letras (no en espacios)
+                    if (currentChar !== ' ' && charIndex % 3 === 0) {
+                        playSoftNote();
+                    }
+
+                    // Pausa natural más larga en comas y puntos
+                    let delay = 36;
+                    if (currentChar === ',' || currentChar === ';') delay = 220;
+                    else if (currentChar === '.' || currentChar === '!' || currentChar === '?') delay = 380;
+
+                    typingTimeout = setTimeout(typeNextChar, delay);
+                }
+            }
+
+            typeNextChar();
+        }
+
+        // Botón: Mostrar siguiente mensaje bonito + lluvia de girasoles y corazones
+        nextMsgBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentMessageIndex = (currentMessageIndex + 1) % romanticMessages.length;
+            msgCounter.textContent = `Carta ${currentMessageIndex + 1} de ${romanticMessages.length}`;
+            startTypewriter(romanticMessages[currentMessageIndex]);
+
+            // Explosión festiva de girasoles y corazones desde el botón
+            const rect = nextMsgBtn.getBoundingClientRect();
+            spawnBurst(rect.left + rect.width / 2, rect.top, 22);
+        });
+
+        // Botón: Volver a escribir el mensaje actual
+        replayBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            typeTitleAndMessage(romanticMessages[currentMessageIndex]);
+            const rect = replayBtn.getBoundingClientRect();
+            spawnBurst(rect.left + rect.width / 2, rect.top, 12);
+        });
+
+        /* =========================================================================
+           ANIMACIÓN EN CANVAS: GIRASOLES Y CORAZONES FLOTANDO Y CAYENDO SUAVEMENTE
+           ========================================================================= */
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = 0;
+        let height = 0;
+        let particles = [];
+
+        function resizeCanvas() {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        /**
+         * Dibuja un girasol estilizado y luminoso en el Canvas
+         */
+        function drawSunflower(ctx, size, alpha) {
+            ctx.save();
+            ctx.globalAlpha = alpha;
+
+            const petalCount = 12;
+            const petalLength = size * 0.55;
+            const petalWidth = size * 0.22;
+
+            // Pétalos dorados
+            for (let i = 0; i < petalCount; i++) {
+                ctx.save();
+                ctx.rotate((i * Math.PI * 2) / petalCount);
+                ctx.beginPath();
+                ctx.ellipse(0, -size * 0.45, petalWidth, petalLength, 0, 0, Math.PI * 2);
+                const grad = ctx.createLinearGradient(0, -size * 0.2, 0, -size);
+                grad.addColorStop(0, '#f59e0b');
+                grad.addColorStop(1, '#fde047');
+                ctx.fillStyle = grad;
+                ctx.fill();
+                ctx.restore();
+            }
+
+            // Centro marrón cálido con semillas
+            ctx.beginPath();
+            ctx.arc(0, 0, size * 0.34, 0, Math.PI * 2);
+            ctx.fillStyle = '#451a03';
+            ctx.fill();
+            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = '#d97706';
+            ctx.stroke();
+
+            // Brillo interior sutil
+            ctx.beginPath();
+            ctx.arc(-size * 0.08, -size * 0.08, size * 0.12, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(251, 191, 36, 0.25)';
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        /**
+         * Dibuja un corazón romántico en el Canvas
+         */
+        function drawHeart(ctx, size, color, alpha) {
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = color;
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 8;
+
+            const s = size * 0.55;
+            ctx.beginPath();
+            ctx.moveTo(0, s * 0.35);
+            ctx.bezierCurveTo(-s, -s * 0.45, -s * 0.5, -s * 1.15, 0, -s * 0.5);
+            ctx.bezierCurveTo(s * 0.5, -s * 1.15, s, -s * 0.45, 0, s * 0.35);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        const heartColors = ['#fb7185', '#f43f5e', '#fda4af', '#fbbf24'];
+
+        class DecorativeParticle {
+            constructor(x, y, isBurst = false) {
+                this.isBurst = isBurst;
+                this.type = Math.random() < 0.48 ? 'sunflower' : 'heart';
+                this.x = x !== undefined ? x : Math.random() * width;
+                this.y = y !== undefined ? y : Math.random() * height;
+                this.size = isBurst
+                    ? (Math.random() * 14 + 12)
+                    : (Math.random() * 15 + 11);
+
+                if (isBurst) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = Math.random() * 4.5 + 1.8;
+                    this.vx = Math.cos(angle) * speed;
+                    this.vy = Math.sin(angle) * speed - 2.2;
+                    this.gravity = 0.06;
+                    this.life = 1.0;
+                    this.decay = Math.random() * 0.012 + 0.008;
+                } else {
+                    // Movimiento suave flotante/cayendo en el fondo
+                    this.vx = (Math.random() - 0.5) * 0.5;
+                    this.vy = Math.random() * 0.55 + 0.25; // Caída delicada
+                    this.swayAngle = Math.random() * Math.PI * 2;
+                    this.swaySpeed = Math.random() * 0.02 + 0.01;
+                    this.alpha = Math.random() * 0.38 + 0.22; // Sutil para no obstruir lectura
+                }
+
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotationSpeed = (Math.random() - 0.5) * 0.025;
+                this.color = heartColors[Math.floor(Math.random() * heartColors.length)];
+            }
+
+            update() {
+                if (this.isBurst) {
+                    this.vy += this.gravity;
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    this.rotation += this.rotationSpeed * 2.5;
+                    this.life -= this.decay;
+                } else {
+                    this.swayAngle += this.swaySpeed;
+                    this.x += this.vx + Math.sin(this.swayAngle) * 0.45;
+                    this.y += this.vy;
+                    this.rotation += this.rotationSpeed;
+
+                    // Reaparecer suavemente arriba al salir por abajo
+                    if (this.y > height + 30) {
+                        this.y = -30;
+                        this.x = Math.random() * width;
+                    }
+                    if (this.x > width + 30) this.x = -30;
+                    if (this.x < -30) this.x = width + 30;
+                }
+            }
+
+            draw(ctx) {
+                const currentAlpha = this.isBurst ? Math.max(0, this.life) : this.alpha;
+                if (currentAlpha <= 0) return;
+
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+
+                if (this.type === 'sunflower') {
+                    drawSunflower(ctx, this.size, currentAlpha);
+                } else {
+                    drawHeart(ctx, this.size, this.color, currentAlpha);
+                }
+
+                ctx.restore();
+            }
+        }
+
+        function initBackgroundParticles() {
+            particles = [];
+            // Cantidad adaptativa según el tamaño de pantalla para rendimiento óptimo y estética limpia
+            const count = width < 640 ? 24 : 38;
+            for (let i = 0; i < count; i++) {
+                particles.push(new DecorativeParticle());
+            }
+        }
+
+        /**
+         * Genera una lluvia extra de girasoles y corazones en las coordenadas dadas
+         */
+        function spawnBurst(x, y, amount = 14) {
+            for (let i = 0; i < amount; i++) {
+                particles.push(new DecorativeParticle(x, y, true));
+            }
+        }
+
+        // Permitir tocar o hacer clic en cualquier parte de la pantalla para lanzar girasoles y corazones
+        document.addEventListener('pointerdown', (e) => {
+            if (e.target.closest('button')) return;
+            spawnBurst(e.clientX, e.clientY, 12);
+        });
+
+        function animateLoop() {
+            ctx.clearRect(0, 0, width, height);
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.update();
+                p.draw(ctx);
+
+                // Eliminar partículas de ráfaga cuando se desvanecen
+                if (p.isBurst && p.life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+
+            requestAnimationFrame(animateLoop);
+        }
+
+        // Iniciar todo al cargar la ventana
+        window.onload = function () {
+            resizeCanvas();
+            initBackgroundParticles();
+            animateLoop();
+            typeTitleAndMessage(romanticMessages[0]);
+        };
+    </script>
+</body>
+</html>
